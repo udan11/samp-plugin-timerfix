@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="SDK">
+      <UniqueIdentifier>{d70d3d86-af23-48cc-9992-e59cdcd74890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\amx">
+      <UniqueIdentifier>{2f1817cb-fb42-4fff-b91a-272cc4f1b95d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\SDK\amx\sclinux.h">
+      <Filter>SDK\amx</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SDK\amx\amx.h">
+      <Filter>SDK\amx</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SDK\plugincommon.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SDK\string.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="src\natives.h" />
+    <ClInclude Include="src\main.h" />
+    <ClInclude Include="src\SDK\redirect.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\SDK\amxplugin.cpp">
+      <Filter>SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SDK\string.cpp">
+      <Filter>SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\SDK\redirect.cpp">
+      <Filter>SDK</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

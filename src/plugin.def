@@ -1,0 +1,8 @@
+LIBRARY	"timerfix"
+EXPORTS
+	Supports
+	Load
+	Unload
+	AmxLoad
+	AmxUnload
+	ProcessTick
