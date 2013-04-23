@@ -37,13 +37,15 @@
 
 #include "natives.h"
 
+#define PLUGIN_VERSION					"v1.0"
+
 typedef void (*logprintf_t)(char*, ...);
 
 struct timer {
 	AMX *amx;
 	int id, funcidx, interval, repeat;
 	unsigned long long next;
-	char *format;
+	char *func, *format;
 	std::vector<std::pair<cell*, int> > params_a;
 	std::vector<cell> params_c;
 	std::vector<char*> params_s;

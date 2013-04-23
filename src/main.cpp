@@ -56,24 +56,21 @@ int create_timer(AMX *amx, cell funcname, cell interval, cell delay, cell repeat
 	memset(t, 0, sizeof(struct timer));
 	t->amx = amx;
 	t->id = lastTimerId++;
-	char *func;
-	amx_GetString_(amx, funcname, func);
-	bool found = !amx_FindPublic(amx, func, &t->funcidx);
-	free(func);
-	if (!found) {
-		logprintf("[plugin.timerfix] Function (%s) was not found.", func);
+	amx_GetString_(amx, funcname, t->func);
+	if (amx_FindPublic(amx, t->func, &t->funcidx)) {
+		logprintf("[plugin.timerfix] %s: Function was not found.", t->func);
 		free_timer(t);
 		return 0;
 	}
-	if (interval < 1) {
-		logprintf("[plugin.timerfix] Interval (%d) must be at least 1.", interval);
+	if (interval < 0) {
+		logprintf("[plugin.timerfix] %s: Interval (%d) must be at least 0.", t->func, interval);
 		free_timer(t);
 		return 0;
 	}
 	t->interval = interval;
 	t->repeat = repeat;
-	if (delay < 1) {
-		logprintf("[plugin.timerfix] Delay (%d) must be at least 1.", delay);
+	if (delay < 0) {
+		logprintf("[plugin.timerfix] %s: Delay (%d) must be at least 0.", t->func, delay);
 		free_timer(t);
 		return 0;
 	}
@@ -119,7 +116,7 @@ int create_timer(AMX *amx, cell funcname, cell interval, cell delay, cell repeat
 					--p; // We didn't read any parameter.
 					break;
 				default: 
-					logprintf("[plugin.timerfix] Format '%c' is not recognized.", t->format[i]);
+					logprintf("[plugin.timerfix] %s: Format '%c' is not recognized.", t->func, t->format[i]);
 					break;
 			}
 		}
@@ -133,6 +130,7 @@ bool is_valid_timer(int id) {
 }
 
 void free_timer(struct timer *&t) {
+	free(t->func);
 	free(t->format);
 	for (int i = 0, size = t->params_a.size(); i != size; ++i) {
 		free(t->params_a[i].first);
@@ -204,7 +202,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
 	QueryPerformanceFrequency(&t);
 	freq = t.QuadPart / 1000;
 #endif
-	logprintf(" >> Plugin succesfully loaded!");
+	logprintf("  >> Timerfix " PLUGIN_VERSION " successfully loaded.");
 	return true;
 }
 

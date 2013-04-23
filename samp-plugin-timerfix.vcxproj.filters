@@ -26,6 +26,7 @@
     <ClInclude Include="src\SDK\redirect.h">
       <Filter>SDK</Filter>
     </ClInclude>
+    <ClInclude Include="src\resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SDK\amxplugin.cpp">
@@ -39,5 +40,8 @@
     <ClCompile Include="src\SDK\redirect.cpp">
       <Filter>SDK</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\plugin.rc" />
   </ItemGroup>
 </Project>
