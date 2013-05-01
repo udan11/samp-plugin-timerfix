@@ -1,19 +1,26 @@
 /**
- * SA:MP Plugin - Timerfix
- * Copyright (C) 2013 Dan
- *  
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *  
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (c) 2013, Dan
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met: 
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer. 
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution. 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 #include "main.h"
@@ -24,30 +31,32 @@ int lastTimerId = 1;
 extern void *pAMXFunctions;
 
 const AMX_NATIVE_INFO NATIVES[] = {
-	{"SetTimer", Natives::SetTimer},
-	{"SetTimerEx", Natives::SetTimerEx},
+	{"KillPlayerTimers", Natives::KillPlayerTimers},
 	{"SetTimer_", Natives::SetTimer_},
 	{"SetTimerEx_", Natives::SetTimerEx_},
-	{"KillTimer", Natives::KillTimer},
+	{"SetPlayerTimer", Natives::SetPlayerTimer},
+	{"SetPlayerTimerEx", Natives::SetPlayerTimerEx},
+	{"SetPlayerTimer_", Natives::SetPlayerTimer_},
+	{"SetPlayerTimerEx_", Natives::SetPlayerTimerEx_},
 	{NULL, NULL}
 };
 
 #ifdef WIN32
-unsigned long long int freq;
-unsigned long long int get_ms_time() {
+unsigned long long freq;
+unsigned long long get_ms_time() {
 	LARGE_INTEGER t;
 	QueryPerformanceCounter(&t);
 	return t.QuadPart / freq;
 }
 #else
-unsigned long long int get_ms_time() {
+unsigned long long get_ms_time() {
 	struct timespec t;
 	clock_gettime(CLOCK_MONOTONIC, &t);
 	return t.tv_sec * 1000 + t.tv_nsec / 1000000;
 }
 #endif
 
-int create_timer(AMX *amx, cell funcname, cell interval, cell delay, cell repeat, cell format, cell *params) {
+int create_timer(AMX *amx, cell playerid, cell funcname, cell interval, cell delay, cell repeat, cell format, cell *params) {
 	struct timer *t = (struct timer*) malloc(sizeof(struct timer));
 	if (t == NULL) {
 		logprintf("[plugin.timerfix] Cannot allocate memory.");
@@ -56,6 +65,7 @@ int create_timer(AMX *amx, cell funcname, cell interval, cell delay, cell repeat
 	memset(t, 0, sizeof(struct timer));
 	t->amx = amx;
 	t->id = lastTimerId++;
+	t->playerid = playerid;
 	amx_GetString_(amx, funcname, t->func);
 	if (amx_FindPublic(amx, t->func, &t->funcidx)) {
 		logprintf("[plugin.timerfix] %s: Function was not found.", t->func);
@@ -105,15 +115,17 @@ int create_timer(AMX *amx, cell funcname, cell interval, cell delay, cell repeat
 					amx_GetAddr(amx, params[p], &ptr);
 					t->params_c.push_back(*ptr);
 					break;
+				case 'p':
+				case 'P':
+				case 't':
+				case 'T':
+					--p; // We didn't read any parameter.
+					break;
 				case 's':
 				case 'S':
 					char *str;
 					amx_GetString_(amx, params[p], str);
 					t->params_s.push_back(str);
-					break;
-				case 't':
-				case 'T':
-					--p; // We didn't read any parameter.
 					break;
 				default: 
 					logprintf("[plugin.timerfix] %s: Format '%c' is not recognized.", t->func, t->format[i]);
@@ -169,6 +181,9 @@ int execute_timer(struct timer *t) {
 				case 'F':
 					amx_Push(t->amx, t->params_c[--c_idx]);
 					break;
+				case 'p':
+				case 'P':
+					amx_Push(t->amx, t->playerid);
 				case 's':
 				case 'S':
 					if (amx_addr < NULL) {
@@ -210,6 +225,7 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *amx) {
 	redirect(amx, "SetTimer", (ucell) Natives::SetTimer, NULL);
 	redirect(amx, "SetTimerEx", (ucell) Natives::SetTimerEx, NULL);
 	redirect(amx, "KillTimer", (ucell) Natives::KillTimer, NULL);
+	redirect(amx, "GetTickCount", (ucell) Natives::GetTickCount, NULL);
 	return amx_Register(amx, NATIVES, -1);
 }
 
@@ -235,7 +251,7 @@ PLUGIN_EXPORT void PLUGIN_CALL Unload() {
 }
 
 PLUGIN_EXPORT void PLUGIN_CALL ProcessTick() {
-	unsigned long long int now = get_ms_time();
+	unsigned long long now = get_ms_time();
 	for (std::map<int, struct timer*>::iterator it = timers.begin(), next = it; it != timers.end(); it = next) {
 		++next;
 		struct timer *t = it->second;

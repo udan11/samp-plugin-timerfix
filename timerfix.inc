@@ -1,27 +1,34 @@
 /**
- * SA:MP Plugin - Timerfix
- * Copyright (C) 2013 Dan
- *  
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *  
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (c) 2013, Dan
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met: 
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer. 
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution. 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  
 /**
- * <version>1.0</version>
+ * <version>1.1</version>
  * <remarks>Supported parameters:
  * 		a, A = arrays (must be followed by an integer - array's szie);
  * 		b, B = boolean; c, C = character; d, D, i, I = integer;
- * 		s, S = string; t, T = timer's ID
+ * 		s, S = string; p, P = player's ID, t, T = timer's ID
  * </remarks>
  */
 
@@ -30,6 +37,37 @@
  */
 #define KillTimer_						KillTimer
  
+/**
+ * <summary>Improved GetTickCount (more accurate).</summary>
+ * <returns>Current time in miliseconds.</returns>
+ */
+//native GetTickCount();
+
+/**
+ * <summary>Kills all timers a player owns.</summary>
+ * <param name="playerid">The player that owns the timers.</param>
+ */
+native KillPlayerTimers(playerid);
+ 
+/**
+ * <summary>Basic SetTimer.</summary>
+ * <param name="func">Name of the public function to call.</param>
+ * <param name="interval">Interval in milliseconds.</param>
+ * <param name="repeating">Whether this timer will repeat or will execute only one time.</param>
+ * <returns>The ID of the timer.</returns>
+ */
+//native SetTimer(func[], interval, repeating);
+
+/**
+ * <summary>Basic SetTimerEx.</summary>
+ * <param name="func">Name of the public function to call.</param>
+ * <param name="interval">Interval in milliseconds.</param>
+ * <param name="repeating">Whether this timer will repeat or will execute only one time.</param>
+ * <param name="format">Special format indicating the types of values the timer will pass.</param>
+ * <returns>The ID of the timer.</returns>
+ */
+//native SetTimerEx(func[], interval, repeating, const format[], {Float,_}:...);
+
 /**
  * <summary>An improved version of SetTimer.</summary>
  * <param name="func">Name of the public function to call.</param>
@@ -50,3 +88,66 @@ native SetTimer_(func[], interval, delay, count);
  * <returns>The ID of the timer.</returns>
  */
 native SetTimerEx_(func[], interval, delay, count, format[], {Float, _}:...);
+
+/**
+ * <summary>Basic SetPlayerTimer.</summary>
+ * <param name="playerid">The player that owns the timer.</param>
+ * <param name="func">Name of the public function to call.</param>
+ * <param name="interval">Interval in milliseconds.</param>
+ * <param name="repeating">Whether this timer will repeat or will execute only one time.</param>
+ * <returns>The ID of the timer.</returns>
+ */
+native SetPlayerTimer(playerid, func[], interval, repeating);
+
+/**
+ * <summary>Basic SetPlayerTimerEx.</summary>
+ * <param name="playerid">The player that owns the timer.</param>
+ * <param name="func">Name of the public function to call.</param>
+ * <param name="interval">Interval in milliseconds.</param>
+ * <param name="repeating">Whether this timer will repeat or will execute only one time.</param>
+ * <param name="format">Special format indicating the types of values the timer will pass.</param>
+ * <returns>The ID of the timer.</returns>
+ */
+native SetPlayerTimerEx(playerid, func[], interval, repeating, const format[], {Float,_}:...);
+
+/**
+ * <summary>An improved version of SetPlayerTimer.</summary>
+ * <param name="playerid">The player that owns the timer.</param>
+ * <param name="func">Name of the public function to call.</param>
+ * <param name="interval">Interval in milliseconds.</param>
+ * <param name="delay">Time after this timer should be called for the first time.</param>
+ * <param name="count">How many times it should repeat before it's killed (-1 for unlimited).</param>
+ * <returns>The ID of the timer.</returns>
+ */
+native SetPlayerTimer_(playerid, func[], interval, delay, count);
+
+/**
+ * <summary>An improved version of SetPlayerTimerEx.</summary>
+ * <param name="playerid">The player that owns the timer.</param>
+ * <param name="func">Name of the public function to call.</param>
+ * <param name="interval">Interval in milliseconds.</param>
+ * <param name="delay">Time after this timer should be called for the first time.</param>
+ * <param name="count">How many times it should repeat before it's killed (-1 for unlimited).</param>
+ * <param name="format">Special format indicating the types of values the timer will pass.</param>
+ * <returns>The ID of the timer.</returns>
+ */
+native SetPlayerTimerEx_(playerid, func[], interval, delay, count, format[], {Float, _}:...);
+
+// Kills a player's timers on disconnect.
+public OnPlayerDisconnect(playerid) {
+	KillPlayerTimers(playerid);
+	#if defined TIMERFIX_OnPlayerDisconnect
+		return TIMERFIX_OnPlayerDisconnect(playerid);
+	#else
+		return 1;
+	#endif
+}
+#if defined _ALS_OnPlayerDisconnect
+	#undef OnPlayerDisconnect
+#else
+	#define _ALS_OnPlayerDisconnect
+#endif
+#define OnPlayerDisconnect TIMERFIX_OnPlayerDisconnect
+#if defined TIMERFIX_OnPlayerDisconnect
+	forward TIMERFIX_OnPlayerDisconnect(playerid);
+#endif
