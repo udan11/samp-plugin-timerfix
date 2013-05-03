@@ -44,7 +44,7 @@
 
 #include "natives.h"
 
-#define PLUGIN_VERSION					"v1.0"
+#define PLUGIN_VERSION					"v1.1"
 
 #define INVALID_PLAYER_ID				0xFFFF
 
