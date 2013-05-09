@@ -140,10 +140,10 @@ native SetPlayerTimer_(playerid, func[], interval, delay, count);
 native SetPlayerTimerEx_(playerid, func[], interval, delay, count, format[], {Float, _}:...);
 
 // Kills a player's timers on disconnect.
-public OnPlayerDisconnect(playerid) {
+public OnPlayerDisconnect(playerid, reason) {
 	KillPlayerTimers(playerid);
 	#if defined TIMERFIX_OnPlayerDisconnect
-		return TIMERFIX_OnPlayerDisconnect(playerid);
+		return TIMERFIX_OnPlayerDisconnect(playerid, reason);
 	#else
 		return 1;
 	#endif
@@ -155,5 +155,5 @@ public OnPlayerDisconnect(playerid) {
 #endif
 #define OnPlayerDisconnect TIMERFIX_OnPlayerDisconnect
 #if defined TIMERFIX_OnPlayerDisconnect
-	forward TIMERFIX_OnPlayerDisconnect(playerid);
+	forward TIMERFIX_OnPlayerDisconnect(playerid, reason);
 #endif
