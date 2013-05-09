@@ -45,6 +45,12 @@
 
 /**
  * <summary>Kills all timers a player owns.</summary>
+ * <param name="timerid">The ID of the timer.</param>
+ */
+native KillPlayerTimer(timerid) = KillTimer;
+
+/**
+ * <summary>Kills all timers a player owns.</summary>
  * <param name="playerid">The player that owns the timers.</param>
  */
 native KillPlayerTimers(playerid);

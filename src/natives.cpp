@@ -49,10 +49,15 @@ cell AMX_NATIVE_CALL Natives::KillPlayerTimers(AMX *amx, cell *params) {
 	if (params[0] < 4) {
 		return 0;
 	}
-	for (std::map<int, struct timer*>::iterator it = timers.begin(), next = it; it != timers.end(); it = next) {
-		++next;
-		struct timer *t = it->second;
-		t->repeat = 0;
+	int playerid = params[1];
+	if (playerid != INVALID_PLAYER_ID) {
+		for (std::map<int, struct timer*>::iterator it = timers.begin(), next = it; it != timers.end(); it = next) {
+			++next;
+			struct timer *t = it->second;
+			if (t->playerid == playerid) {
+				t->repeat = 0;
+			}
+		}
 	}
 	return 1;
 }
