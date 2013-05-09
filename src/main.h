@@ -37,6 +37,10 @@
 	#include <time.h>
 #endif
 
+#ifndef MAX_INT
+	#define MAX_INT						2147483647
+#endif
+
 #include "SDK/amx/amx.h"
 #include "SDK/plugincommon.h"
 #include "SDK/redirect.h"
@@ -61,6 +65,7 @@ struct timer {
 };
 
 extern std::map<int, struct timer*> timers;
+extern unsigned long long start_time;
 
 extern unsigned long long get_ms_time();
 

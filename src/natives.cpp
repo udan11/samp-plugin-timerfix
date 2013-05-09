@@ -26,7 +26,7 @@
 #include "natives.h"
 
 cell AMX_NATIVE_CALL Natives::GetTickCount(AMX *amx, cell *params) {
-	return get_ms_time();
+	return (int) ((get_ms_time() - start_time) % MAX_INT);
 }
 
 cell AMX_NATIVE_CALL Natives::KillTimer(AMX *amx, cell *params) {

@@ -25,10 +25,11 @@
 
 #include "main.h"
 
+extern void *pAMXFunctions;
 logprintf_t logprintf;
 std::map<int, struct timer*> timers;
+unsigned long long start_time = 0;
 int lastTimerId = 1;
-extern void *pAMXFunctions;
 
 const AMX_NATIVE_INFO NATIVES[] = {
 	{"KillPlayerTimers", Natives::KillPlayerTimers},
@@ -217,6 +218,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
 	QueryPerformanceFrequency(&t);
 	freq = t.QuadPart / 1000;
 #endif
+	start_time = get_ms_time();
 	logprintf("  >> Timerfix " PLUGIN_VERSION " successfully loaded.");
 	return true;
 }
