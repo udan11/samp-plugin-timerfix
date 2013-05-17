@@ -37,16 +37,16 @@
 	#include <time.h>
 #endif
 
+#include "sdk/amx/amx.h"
+#include "sdk/plugincommon.h"
+#include "sdk/amxredirect.h"
+#include "sdk/amxstring.h"
+
+#include "natives.h"
+
 #ifndef MAX_INT
 	#define MAX_INT						2147483647
 #endif
-
-#include "SDK/amx/amx.h"
-#include "SDK/plugincommon.h"
-#include "SDK/redirect.h"
-#include "SDK/string.h"
-
-#include "natives.h"
 
 #define PLUGIN_VERSION					"v1.2"
 
