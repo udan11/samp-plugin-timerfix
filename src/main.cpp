@@ -211,8 +211,8 @@ PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports() {
 }
 
 PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
-	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
 	logprintf = (logprintf_t) ppData[PLUGIN_DATA_LOGPRINTF];
+	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
 #ifdef WIN32
 	LARGE_INTEGER t;
 	QueryPerformanceFrequency(&t);
@@ -244,11 +244,6 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *amx) {
 }
 
 PLUGIN_EXPORT void PLUGIN_CALL Unload() {
-	for (std::map<int, struct timer*>::iterator it = timers.begin(), next = it; it != timers.end(); it = next) {
-		++next;
-		free_timer(it->second);
-		timers.erase(it);
-	}
 	logprintf("[plugin.timerfix] Plugin succesfully unloaded!");
 }
 
