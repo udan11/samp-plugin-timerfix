@@ -47,4 +47,7 @@
   <ItemGroup>
     <ResourceCompile Include="src\plugin.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="src\plugin.def" />
+  </ItemGroup>
 </Project>
