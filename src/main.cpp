@@ -162,13 +162,14 @@ int execute_timer(struct timer *t) {
 	if (t->format != NULL) {
 		int a_idx = t->params_a.size(), c_idx = t->params_c.size(), s_idx = t->params_s.size();
 		for (int i = strlen(t->format) - 1; i != -1; --i) {
+			cell tmp;
 			switch (t->format[i]) {
 				case 'a':
 				case 'A':
-					if (amx_addr < NULL) {
-						amx_addr = NULL;
+					amx_PushArray(t->amx, &tmp, NULL, t->params_a[--a_idx].first, t->params_a[a_idx].second);
+					if (amx_addr == -1) {
+						amx_addr = tmp;
 					}
-					amx_PushArray(t->amx, &amx_addr, NULL, t->params_a[--a_idx].first, t->params_a[a_idx].second);
 					break;
 				case 'b':
 				case 'B':
@@ -187,10 +188,10 @@ int execute_timer(struct timer *t) {
 					amx_Push(t->amx, t->playerid);
 				case 's':
 				case 'S':
-					if (amx_addr < NULL) {
-						amx_addr = NULL;
+					amx_PushString(t->amx, &tmp, NULL, t->params_s[--s_idx], NULL, NULL);
+					if (amx_addr == -1) {
+						amx_addr = tmp;
 					}
-					amx_PushString(t->amx, &amx_addr, NULL, t->params_s[--s_idx], NULL, NULL);
 					break;
 				case 't':
 				case 'T':
@@ -200,8 +201,8 @@ int execute_timer(struct timer *t) {
 		}
 	}
 	amx_Exec(t->amx, &ret, t->funcidx);
-	if (amx_addr >= NULL) {
-		amx_Release(t->amx, amx_addr);
+	if (amx_addr != -1) {
+		amx_Release(amx, amx_addr);
 	}
 	return (int) ret;
 }
