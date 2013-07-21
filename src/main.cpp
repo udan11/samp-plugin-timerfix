@@ -39,6 +39,8 @@ const AMX_NATIVE_INFO NATIVES[] = {
 	{"SetPlayerTimerEx", Natives::SetPlayerTimerEx},
 	{"SetPlayerTimer_", Natives::SetPlayerTimer_},
 	{"SetPlayerTimerEx_", Natives::SetPlayerTimerEx_},
+	{"GetTimerCallsLeft", Natives::GetTimerCallsLeft},
+	{"GetTimerIntervalLeft", Natives::GetTimerIntervalLeft},
 	{NULL, NULL}
 };
 
@@ -220,7 +222,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
 	freq = t.QuadPart / 1000;
 #endif
 	start_time = get_ms_time();
-	logprintf("  >> Timerfix " PLUGIN_VERSION " successfully loaded.");
+	logprintf("  >> TimerFix " PLUGIN_VERSION " successfully loaded.");
 	return true;
 }
 
@@ -245,7 +247,7 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *amx) {
 }
 
 PLUGIN_EXPORT void PLUGIN_CALL Unload() {
-	logprintf("[plugin.timerfix] Plugin succesfully unloaded!");
+	logprintf("[plugin.timerfix] Plugsin successfully unloaded!");
 }
 
 PLUGIN_EXPORT void PLUGIN_CALL ProcessTick() {

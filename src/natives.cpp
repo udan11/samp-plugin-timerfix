@@ -117,3 +117,25 @@ cell AMX_NATIVE_CALL Natives::SetPlayerTimerEx_(AMX *amx, cell *params) {
 	}
 	return create_timer(amx, params[1], params[2], params[3], params[4], params[5], params[6], &params[7]);
 }
+
+cell AMX_NATIVE_CALL Natives::GetTimerCallsLeft(AMX *amx, cell *params) {
+	if (params[0] < 4) {
+		return 0;
+	}
+	int id = params[1];
+	if (is_valid_timer(id)) {
+		return timers[id]->repeat;
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::GetTimerIntervalLeft(AMX *amx, cell *params) {
+	if (params[0] < 4) {
+		return 0;
+	}
+	int id = params[1];
+	if (is_valid_timer(id)) {
+		return timers[id]->next - get_ms_time();
+	}
+	return 0;
+}

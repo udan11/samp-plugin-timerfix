@@ -40,6 +40,8 @@ class Natives {
 		static cell AMX_NATIVE_CALL SetPlayerTimerEx(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL SetPlayerTimer_(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL SetPlayerTimerEx_(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL GetTimerCallsLeft(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL GetTimerIntervalLeft(AMX *amx, cell *params);
 	private:
 		Natives();
 		~Natives();

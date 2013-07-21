@@ -48,7 +48,7 @@
 	#define MAX_INT						2147483647
 #endif
 
-#define PLUGIN_VERSION					"v1.2"
+#define PLUGIN_VERSION					"v1.3"
 
 #define INVALID_PLAYER_ID				0xFFFF
 

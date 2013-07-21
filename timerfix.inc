@@ -22,9 +22,9 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 /**
- * <version>1.2</version>
+ * <version>1.3</version>
  * <remarks>Supported parameters:
  * 		a, A = arrays (must be followed by an integer - array's szie);
  * 		b, B = boolean; c, C = character; d, D, i, I = integer;
@@ -36,7 +36,7 @@
  * <summary>Same KillTimer is used for all types of timer.</summary>
  */
 #define KillTimer_						KillTimer
- 
+
 /**
  * <summary>Improved GetTickCount (more accurate).</summary>
  * <returns>Current time in miliseconds.</returns>
@@ -138,6 +138,20 @@ native SetPlayerTimer_(playerid, func[], interval, delay, count);
  * <returns>The ID of the timer.</returns>
  */
 native SetPlayerTimerEx_(playerid, func[], interval, delay, count, format[], {Float, _}:...);
+
+/**
+ * <summary>Gets the number of remaining calls of this timer.</summary>
+ * <param name="timerid">The ID of the timer.</param>
+ * <returns>-1 for infinite timers, 0 for invalid ones and positive values for the others.</returns>
+ */
+native GetTimerCallsLeft(timerid);
+
+/**
+ * <summary>Gets the time remaining before this timer is called again.</summary>
+ * <param name="timerid">The ID of the timer.</param>
+ * <returns>0 for invalid timers or the time (in miliseconds) until the execution.</returns>
+ */
+native GetTimerIntervalLeft(timerid);
 
 // Kills a player's timers on disconnect.
 public OnPlayerDisconnect(playerid, reason) {
