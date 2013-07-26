@@ -204,7 +204,7 @@ int execute_timer(struct timer *t) {
 	}
 	amx_Exec(t->amx, &ret, t->funcidx);
 	if (amx_addr != -1) {
-		amx_Release(amx, amx_addr);
+		amx_Release(t->amx, amx_addr);
 	}
 	return (int) ret;
 }
@@ -227,10 +227,10 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
 }
 
 PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *amx) {
-	redirect(amx, "SetTimer", (ucell) Natives::SetTimer, NULL);
-	redirect(amx, "SetTimerEx", (ucell) Natives::SetTimerEx, NULL);
-	redirect(amx, "KillTimer", (ucell) Natives::KillTimer, NULL);
-	redirect(amx, "GetTickCount", (ucell) Natives::GetTickCount, NULL);
+	amx_Redirect(amx, "SetTimer", (ucell) Natives::SetTimer, NULL);
+	amx_Redirect(amx, "SetTimerEx", (ucell) Natives::SetTimerEx, NULL);
+	amx_Redirect(amx, "KillTimer", (ucell) Natives::KillTimer, NULL);
+	amx_Redirect(amx, "GetTickCount", (ucell) Natives::GetTickCount, NULL);
 	return amx_Register(amx, NATIVES, -1);
 }
 
