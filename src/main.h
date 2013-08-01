@@ -38,9 +38,8 @@
 #endif
 
 #include "sdk/amx/amx.h"
+#include "sdk/amx/amx2.h"
 #include "sdk/plugincommon.h"
-#include "sdk/amxredirect.h"
-#include "sdk/amxstring.h"
 
 #include "natives.h"
 

@@ -9,23 +9,17 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\SDK\amx\sclinux.h">
-      <Filter>sdk\amx</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SDK\amx\amx.h">
-      <Filter>sdk\amx</Filter>
-    </ClInclude>
     <ClInclude Include="src\natives.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\resource.h" />
-    <ClInclude Include="src\sdk\amxredirect.h">
-      <Filter>sdk</Filter>
+    <ClInclude Include="src\sdk\amx\amx2.h">
+      <Filter>sdk\amx</Filter>
     </ClInclude>
-    <ClInclude Include="src\sdk\amxstring.h">
-      <Filter>sdk</Filter>
+    <ClInclude Include="src\sdk\amx\sclinux.h">
+      <Filter>sdk\amx</Filter>
     </ClInclude>
-    <ClInclude Include="src\sdk\amxtable.h">
-      <Filter>sdk</Filter>
+    <ClInclude Include="src\sdk\amx\amx.h">
+      <Filter>sdk\amx</Filter>
     </ClInclude>
     <ClInclude Include="src\sdk\plugincommon.h">
       <Filter>sdk</Filter>
@@ -34,13 +28,10 @@
   <ItemGroup>
     <ClCompile Include="src\natives.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\sdk\amxstring.cpp">
+    <ClCompile Include="src\sdk\amxplugin2.cpp">
       <Filter>sdk</Filter>
     </ClCompile>
     <ClCompile Include="src\sdk\amxplugin.cpp">
-      <Filter>sdk</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sdk\amxredirect.cpp">
       <Filter>sdk</Filter>
     </ClCompile>
   </ItemGroup>

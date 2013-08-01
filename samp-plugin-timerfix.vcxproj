@@ -63,19 +63,16 @@
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\natives.h" />
     <ClInclude Include="src\resource.h" />
-    <ClInclude Include="src\sdk\amxredirect.h" />
-    <ClInclude Include="src\sdk\amxstring.h" />
-    <ClInclude Include="src\sdk\amxtable.h" />
-    <ClInclude Include="src\SDK\amx\amx.h" />
-    <ClInclude Include="src\SDK\amx\sclinux.h" />
+    <ClInclude Include="src\sdk\amx\amx.h" />
+    <ClInclude Include="src\sdk\amx\amx2.h" />
+    <ClInclude Include="src\sdk\amx\sclinux.h" />
     <ClInclude Include="src\sdk\plugincommon.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\natives.cpp" />
     <ClCompile Include="src\sdk\amxplugin.cpp" />
-    <ClCompile Include="src\sdk\amxredirect.cpp" />
-    <ClCompile Include="src\sdk\amxstring.cpp" />
+    <ClCompile Include="src\sdk\amxplugin2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\plugin.rc" />
