@@ -29,7 +29,6 @@ COMPILE_FLAGS = -c -fPIC -m32 -O3 -w -Wall -DLINUX
 OUTFILE = "bin/timerfix.so"
 
 all:
-	$(GPP) $(COMPILE_FLAGS) src/sdk/amx/*.cpp
 	$(GPP) $(COMPILE_FLAGS) src/sdk/*.cpp
 	$(GPP) $(COMPILE_FLAGS) src/*.cpp
 	$(GPP) -m32 -shared -o $(OUTFILE) *.o
