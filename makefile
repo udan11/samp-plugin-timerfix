@@ -24,14 +24,17 @@
 GPP = g++
 GCC = gcc
 
+# Compilation flags.
 COMPILE_FLAGS = -c -fPIC -m32 -O3 -w -Wall -DLINUX
+LIBRARIES = -lrt
 
+# Output file name.
 OUTFILE = "bin/timerfix.so"
 
 all:
 	$(GPP) $(COMPILE_FLAGS) src/sdk/*.cpp
 	$(GPP) $(COMPILE_FLAGS) src/*.cpp
-	$(GPP) -m32 -shared -o $(OUTFILE) *.o
+	$(GPP) -m32 -shared -o $(OUTFILE) *.o $(LIBRARIES) 
 	
 clean:
 	rm -f *.o

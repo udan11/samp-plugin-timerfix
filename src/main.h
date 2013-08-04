@@ -27,12 +27,13 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 
 #include <map>
 #include <vector>
 
 #if ((defined(WIN32)) || (defined(_WIN32)) || (defined(_WIN64)))
-	#include "windows.h"
+	#include <Windows.h>
 #else
 	#include <time.h>
 #endif
