@@ -69,7 +69,7 @@ int create_timer(AMX *amx, cell playerid, cell funcname, cell interval, cell del
 	t->amx = amx;
 	t->id = lastTimerId++;
 	t->playerid = playerid;
-	amx_GetString_(amx, funcname, t->func);
+	amx_GetCString(amx, funcname, t->func);
 	if (amx_FindPublic(amx, t->func, &t->funcidx)) {
 		logprintf("[plugin.timerfix] %s: Function was not found.", t->func);
 		free_timer(t);
@@ -89,7 +89,7 @@ int create_timer(AMX *amx, cell playerid, cell funcname, cell interval, cell del
 	}
 	t->next = get_ms_time() + delay;
 	if (format != NULL) {
-		amx_GetString_(amx, format, t->format);
+		amx_GetCString(amx, format, t->format);
 		for (int i = 0, len = strlen(t->format), p = 0; i != len; ++i, ++p) {
 			switch (t->format[i]) {
 				case 'a':
@@ -127,7 +127,7 @@ int create_timer(AMX *amx, cell playerid, cell funcname, cell interval, cell del
 				case 's':
 				case 'S':
 					char *str;
-					amx_GetString_(amx, params[p], str);
+					amx_GetCString(amx, params[p], str);
 					t->params_s.push_back(str);
 					break;
 				default: 
