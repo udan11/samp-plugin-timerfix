@@ -1,4 +1,4 @@
-# Copyright (c) 2013, Dan
+# Copyright (c) 2013-2014, Dan
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -19,22 +19,28 @@
 # LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 # ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\
 
-GPP = g++
-GCC = gcc
+ifndef CC
+	CC = gcc
+endif
+
+ifndef GXX
+	GXX = g++
+endif
 
 # Compilation flags.
 COMPILE_FLAGS = -c -fPIC -m32 -O3 -w -Wall -DLINUX
 LIBRARIES = -lrt
 
 # Output file name.
-OUTFILE = "bin/timerfix.so"
+OUTFILE = bin/timerfix.so
 
 all:
-	$(GPP) $(COMPILE_FLAGS) src/sdk/*.cpp
-	$(GPP) $(COMPILE_FLAGS) src/*.cpp
-	$(GPP) -m32 -shared -o $(OUTFILE) *.o $(LIBRARIES) 
+	mkdir -p bin
+	$(GXX) $(COMPILE_FLAGS) src/sdk/*.cpp
+	$(GXX) $(COMPILE_FLAGS) src/*.cpp
+	$(GXX) -m32 -shared -o $(OUTFILE) *.o $(LIBRARIES) 
 	
 clean:
 	rm -f *.o

@@ -9,12 +9,12 @@
 
 # Build results
 
-[Dd]ebug/
-[Rr]elease/
-x64/
-build/
-[Bb]in/
-[Oo]bj/
+/[Dd]ebug/
+/[Rr]elease/
+/x64/
+/build/
+/[Bb]in/
+/[Oo]bj/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -106,7 +106,6 @@ csx
 AppPackages/
 
 # Others
-sql/
 *.Cache
 ClientBin/
 [Ss]tyle[Cc]op.*
@@ -137,6 +136,7 @@ App_Data/*.ldf
 
 .*
 !.gitignore
+!.travis.yml
 *~
 
 # =========================
