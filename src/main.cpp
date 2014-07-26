@@ -28,7 +28,7 @@
 extern void *pAMXFunctions;
 logprintf_t logprintf;
 std::map<int, struct timer*> timers;
-unsigned long long start_time = 0;
+unsigned long long startTime = 0;
 int lastTimerId = 1;
 
 const AMX_NATIVE_INFO NATIVES[] = {
@@ -45,21 +45,25 @@ const AMX_NATIVE_INFO NATIVES[] = {
 };
 
 #ifdef WIN32
-unsigned long long freq;
-unsigned long long get_ms_time() {
-	LARGE_INTEGER t;
-	QueryPerformanceCounter(&t);
-	return t.QuadPart / freq;
-}
+	unsigned long long freq;
+	unsigned long long getMsTime() {
+		LARGE_INTEGER t;
+		QueryPerformanceCounter(&t);
+		return t.QuadPart / freq;
+	}
 #else
-unsigned long long get_ms_time() {
-	struct timespec t;
-	clock_gettime(CLOCK_MONOTONIC, &t);
-	return t.tv_sec * 1000 + t.tv_nsec / 1000000;
-}
+	unsigned long long getMsTime() {
+		struct timespec t;
+		clock_gettime(CLOCK_MONOTONIC, &t);
+		return t.tv_sec * 1000 + t.tv_nsec / 1000000;
+	}
 #endif
 
-int create_timer(AMX *amx, cell playerid, cell funcname, cell interval, cell delay, cell repeat, cell format, cell *params) {
+unsigned long long getRelativeMsTime() {
+	return getMsTime() - startTime;
+}
+
+int createTimer(AMX *amx, cell playerid, cell funcname, cell interval, cell delay, cell repeat, cell format, cell *params) {
 	struct timer *t = (struct timer*) malloc(sizeof(struct timer));
 	if (t == NULL) {
 		logprintf("[plugin.timerfix] Cannot allocate memory.");
@@ -72,22 +76,22 @@ int create_timer(AMX *amx, cell playerid, cell funcname, cell interval, cell del
 	amx_GetCString(amx, funcname, t->func);
 	if (amx_FindPublic(amx, t->func, &t->funcidx)) {
 		logprintf("[plugin.timerfix] %s: Function was not found.", t->func);
-		free_timer(t);
+		freeTimer(t);
 		return 0;
 	}
 	if (interval < 0) {
 		logprintf("[plugin.timerfix] %s: Interval (%d) must be at least 0.", t->func, interval);
-		free_timer(t);
+		freeTimer(t);
 		return 0;
 	}
 	t->interval = interval;
 	t->repeat = repeat;
 	if (delay < 0) {
 		logprintf("[plugin.timerfix] %s: Delay (%d) must be at least 0.", t->func, delay);
-		free_timer(t);
+		freeTimer(t);
 		return 0;
 	}
-	t->next = get_ms_time() + delay;
+	t->next = getRelativeMsTime() + delay;
 	if (format != NULL) {
 		amx_GetCString(amx, format, t->format);
 		for (int i = 0, len = strlen(t->format), p = 0; i != len; ++i, ++p) {
@@ -140,11 +144,11 @@ int create_timer(AMX *amx, cell playerid, cell funcname, cell interval, cell del
 	return t->id;
 }
 
-bool is_valid_timer(int id) {
+bool isValidTimer(int id) {
 	return timers.find(id) != timers.end();
 }
 
-void free_timer(struct timer *&t) {
+void freeTimer(struct timer *&t) {
 	free(t->func);
 	free(t->format);
 	for (int i = 0, size = t->params_a.size(); i != size; ++i) {
@@ -159,7 +163,7 @@ void free_timer(struct timer *&t) {
 	free(t);
 }
 
-int execute_timer(struct timer *t) {
+int executeTimer(struct timer *t) {
 	cell ret, amx_addr = -1;
 	if (t->format != NULL) {
 		int a_idx = t->params_a.size(), c_idx = t->params_c.size(), s_idx = t->params_s.size();
@@ -168,7 +172,8 @@ int execute_timer(struct timer *t) {
 			switch (t->format[i]) {
 				case 'a':
 				case 'A':
-					amx_PushArray(t->amx, &tmp, NULL, t->params_a[--a_idx].first, t->params_a[a_idx].second);
+					--a_idx;
+					amx_PushArray(t->amx, &tmp, NULL, t->params_a[a_idx].first, t->params_a[a_idx].second);
 					if (amx_addr == -1) {
 						amx_addr = tmp;
 					}
@@ -221,7 +226,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
 	QueryPerformanceFrequency(&t);
 	freq = t.QuadPart / 1000;
 #endif
-	start_time = get_ms_time();
+	startTime = getMsTime();
 	logprintf("  >> TimerFix " PLUGIN_VERSION " successfully loaded.");
 	return true;
 }
@@ -239,7 +244,7 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *amx) {
 		++next;
 		struct timer *t = it->second;
 		if (t->amx == amx) {
-			free_timer(t);
+			freeTimer(t);
 			timers.erase(it);
 		}
 	}
@@ -251,20 +256,20 @@ PLUGIN_EXPORT void PLUGIN_CALL Unload() {
 }
 
 PLUGIN_EXPORT void PLUGIN_CALL ProcessTick() {
-	unsigned long long now = get_ms_time();
+	unsigned long long now = getRelativeMsTime();
 	for (std::map<int, struct timer*>::iterator it = timers.begin(), next = it; it != timers.end(); it = next) {
 		++next;
 		struct timer *t = it->second;
 		if (t->repeat != 0) {
 			if (t->next < now) {
-				execute_timer(it->second);
+				executeTimer(it->second);
 				t->next += t->interval;
 				if (t->repeat > 0) {
 					--t->repeat;
 				}
 			}
 		} else {
-			free_timer(t);
+			freeTimer(t);
 			timers.erase(it);
 		}
 	}

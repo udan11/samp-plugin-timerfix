@@ -65,11 +65,12 @@ struct timer {
 };
 
 extern std::map<int, struct timer*> timers;
-extern unsigned long long start_time;
+extern unsigned long long startTime;
 
-extern unsigned long long get_ms_time();
+extern unsigned long long getMsTime();
+extern unsigned long long getRelativeMsTime();
 
-extern int create_timer(AMX *amx, cell playerid, cell funcname, cell interval, cell delay, cell repeat, cell format, cell *params);
-extern bool is_valid_timer(int id);
-extern void free_timer(struct timer *&t);
-extern int execute_timer(struct timer *t);
+extern int createTimer(AMX *amx, cell playerid, cell funcname, cell interval, cell delay, cell repeat, cell format, cell *params);
+extern bool isValidTimer(int id);
+extern void freeTimer(struct timer *&t);
+extern int executeTimer(struct timer *t);
