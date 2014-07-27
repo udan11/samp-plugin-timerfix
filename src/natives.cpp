@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013, Dan
+ * Copyright (c) 2013-2014, Dan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,10 +37,6 @@ cell AMX_NATIVE_CALL Natives::KillTimer(AMX *amx, cell *params) {
 	if (isValidTimer(id)) {
 		// Scheduling for deletion.
 		timers[id]->repeat = 0;
-		/*
-		free_timer(timers[id]);
-		timers.erase(id);
-		*/
 	}
 	return 1;
 }
@@ -70,7 +66,7 @@ cell AMX_NATIVE_CALL Natives::SetTimer(AMX *amx, cell *params) {
 }
 
 cell AMX_NATIVE_CALL Natives::SetTimerEx(AMX *amx, cell *params) {
-	if (params[0] < 5 * 4) {
+	if (params[0] < 4 * 4) {
 		return 0;
 	}
 	return createTimer(amx, INVALID_PLAYER_ID, params[1], params[2], params[2], params[3] ? -1 : 1, params[4], &params[5]);
@@ -84,14 +80,14 @@ cell AMX_NATIVE_CALL Natives::SetTimer_(AMX *amx, cell *params) {
 }
 
 cell AMX_NATIVE_CALL Natives::SetTimerEx_(AMX *amx, cell *params) {
-	if (params[0] < 6 * 4) {
+	if (params[0] < 5 * 4) {
 		return 0;
 	}
 	return createTimer(amx, INVALID_PLAYER_ID, params[1], params[2], params[3], params[4], params[5], &params[6]);
 }
 
 cell AMX_NATIVE_CALL Natives::SetPlayerTimer(AMX *amx, cell *params) {
-	if (params[0] < 3 * 4) {
+	if (params[0] < 4 * 4) {
 		return 0;
 	}
 	return createTimer(amx, params[1], params[2], params[3], params[3], params[4] ? -1 : 1, NULL, NULL);
@@ -105,7 +101,7 @@ cell AMX_NATIVE_CALL Natives::SetPlayerTimerEx(AMX *amx, cell *params) {
 }
 
 cell AMX_NATIVE_CALL Natives::SetPlayerTimer_(AMX *amx, cell *params) {
-	if (params[0] < 4 * 4) {
+	if (params[0] < 5 * 4) {
 		return 0;
 	}
 	return createTimer(amx, params[1], params[2], params[3], params[4], params[5], NULL, NULL);
@@ -118,13 +114,25 @@ cell AMX_NATIVE_CALL Natives::SetPlayerTimerEx_(AMX *amx, cell *params) {
 	return createTimer(amx, params[1], params[2], params[3], params[4], params[5], params[6], &params[7]);
 }
 
-cell AMX_NATIVE_CALL Natives::GetTimerCallsLeft(AMX *amx, cell *params) {
+cell AMX_NATIVE_CALL Natives::SetTimerInterval(AMX *amx, cell *params) {
+	if (params[0] < 2 * 4) {
+		return 0;
+	}
+	int id = params[1], interval = params[2];
+	if (isValidTimer(id)) {
+		timers[id]->interval = interval;
+		timers[id]->next = getRelativeMsTime() + interval;
+	}
+	return 1;
+}
+
+cell AMX_NATIVE_CALL Natives::GetTimerInterval(AMX *amx, cell *params) {
 	if (params[0] < 4) {
 		return 0;
 	}
 	int id = params[1];
 	if (isValidTimer(id)) {
-		return timers[id]->repeat;
+		return timers[id]->interval;
 	}
 	return 0;
 }
@@ -136,6 +144,40 @@ cell AMX_NATIVE_CALL Natives::GetTimerIntervalLeft(AMX *amx, cell *params) {
 	int id = params[1];
 	if (isValidTimer(id)) {
 		return timers[id]->next - getRelativeMsTime();
+	}
+	return 0;
+}
+
+
+cell AMX_NATIVE_CALL Natives::SetTimerDelay(AMX *amx, cell *params) {
+	if (params[0] < 2 * 4) {
+		return 0;
+	}
+	int id = params[1], delay = params[2];
+	if (isValidTimer(id)) {
+		timers[id]->next = getRelativeMsTime() + delay;
+	}
+	return 1;
+}
+
+cell AMX_NATIVE_CALL Natives::SetTimerCount(AMX *amx, cell *params) {
+	if (params[0] < 2 * 4) {
+		return 0;
+	}
+	int id = params[1], count = params[2];
+	if (isValidTimer(id)) {
+		timers[id]->repeat = count;
+	}
+	return 1;
+}
+
+cell AMX_NATIVE_CALL Natives::GetTimerCallsLeft(AMX *amx, cell *params) {
+	if (params[0] < 4) {
+		return 0;
+	}
+	int id = params[1];
+	if (isValidTimer(id)) {
+		return timers[id]->repeat;
 	}
 	return 0;
 }

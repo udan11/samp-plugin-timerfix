@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013, Dan
+ * Copyright (c) 2013-2014, Dan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
 	#define MAX_INT						2147483647
 #endif
 
-#define PLUGIN_VERSION					"v1.3"
+#define PLUGIN_VERSION					"v1.4"
 
 #define INVALID_PLAYER_ID				0xFFFF
 

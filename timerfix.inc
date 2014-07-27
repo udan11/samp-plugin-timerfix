@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013, Dan
+ * Copyright (c) 2013-2014, Dan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,7 +24,7 @@
  */
 
 /**
- * <version>1.3</version>
+ * <version>1.4</version>
  * <remarks>Supported parameters:
  * 		a, A = arrays (must be followed by an integer - array's szie);
  * 		b, B = boolean; c, C = character; d, D, i, I = integer;
@@ -140,11 +140,18 @@ native SetPlayerTimer_(playerid, func[], interval, delay, count);
 native SetPlayerTimerEx_(playerid, func[], interval, delay, count, format[], {Float, _}:...);
 
 /**
- * <summary>Gets the number of remaining calls of this timer.</summary>
+ * <summary>Sets the interval of a timer.</summary>
  * <param name="timerid">The ID of the timer.</param>
- * <returns>-1 for infinite timers, 0 for invalid ones and positive values for the others.</returns>
+ * <param name="interval">The new interval.</param>
  */
-native GetTimerCallsLeft(timerid);
+native SetTimerInterval(timerid, interval);
+
+/**
+ * <summary>Gets the interval of a timer.</summary>
+ * <param name="timerid">The ID of the timer.</param>
+ * <returns>0 for invalid timers or the interval (in miliseconds).</returns>
+ */
+native GetTimerInterval(timerid);
 
 /**
  * <summary>Gets the time remaining before this timer is called again.</summary>
@@ -152,6 +159,27 @@ native GetTimerCallsLeft(timerid);
  * <returns>0 for invalid timers or the time (in miliseconds) until the execution.</returns>
  */
 native GetTimerIntervalLeft(timerid);
+
+/**
+ * <summary>Sets the delay of a timer.</summary>
+ * <param name="timerid">The ID of the timer.</param>
+ * <param name="delay">The new delay.</param>
+ */
+native SetTimerDelay(timerid, delay);
+
+/**
+ * <summary>Sets the count of a timer.</summary>
+ * <param name="timerid">The ID of the timer.</param>
+ * <param name="count">The new count.</param>
+ */
+native SetTimerCount(timerid, count);
+
+/**
+ * <summary>Gets the number of remaining calls of this timer.</summary>
+ * <param name="timerid">The ID of the timer.</param>
+ * <returns>-1 for infinite timers, 0 for invalid ones and positive values for the others.</returns>
+ */
+native GetTimerCallsLeft(timerid);
 
 // Kills a player's timers on disconnect.
 public OnPlayerDisconnect(playerid, reason) {

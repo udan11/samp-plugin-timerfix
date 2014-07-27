@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013, Dan
+ * Copyright (c) 2013-2014, Dan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,8 +39,12 @@ const AMX_NATIVE_INFO NATIVES[] = {
 	{"SetPlayerTimerEx", Natives::SetPlayerTimerEx},
 	{"SetPlayerTimer_", Natives::SetPlayerTimer_},
 	{"SetPlayerTimerEx_", Natives::SetPlayerTimerEx_},
-	{"GetTimerCallsLeft", Natives::GetTimerCallsLeft},
+	{"SetTimerInterval", Natives::SetTimerInterval},
+	{"GetTimerInterval", Natives::GetTimerInterval},
 	{"GetTimerIntervalLeft", Natives::GetTimerIntervalLeft},
+	{"SetTimerDelay", Natives::SetTimerDelay},
+	{"SetTimerCount", Natives::SetTimerCount},
+	{"GetTimerCallsLeft", Natives::GetTimerCallsLeft},
 	{NULL, NULL}
 };
 
@@ -262,8 +266,8 @@ PLUGIN_EXPORT void PLUGIN_CALL ProcessTick() {
 		struct timer *t = it->second;
 		if (t->repeat != 0) {
 			if (t->next < now) {
-				executeTimer(it->second);
 				t->next += t->interval;
+				executeTimer(it->second);
 				if (t->repeat > 0) {
 					--t->repeat;
 				}

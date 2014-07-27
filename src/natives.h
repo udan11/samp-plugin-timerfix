@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013, Dan
+ * Copyright (c) 2013-2014, Dan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,8 +40,12 @@ class Natives {
 		static cell AMX_NATIVE_CALL SetPlayerTimerEx(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL SetPlayerTimer_(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL SetPlayerTimerEx_(AMX *amx, cell *params);
-		static cell AMX_NATIVE_CALL GetTimerCallsLeft(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL SetTimerInterval(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL GetTimerInterval(AMX *amx, cell *params);
 		static cell AMX_NATIVE_CALL GetTimerIntervalLeft(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL SetTimerDelay(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL SetTimerCount(AMX *amx, cell *params);
+		static cell AMX_NATIVE_CALL GetTimerCallsLeft(AMX *amx, cell *params);
 	private:
 		Natives();
 		~Natives();
