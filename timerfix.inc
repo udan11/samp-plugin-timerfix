@@ -44,6 +44,19 @@
 //native GetTickCount();
 
 /**
+ * <summary>Checks if a timer is still alive.</summary>
+ * <param name="timerid">The ID of the timer.</param>
+ * <returns>`true` if the timer is valid or `false` otherwise.</returns>
+ */
+native IsValidTimer(timerid);
+
+/**
+ * <summary>Gets the number of active timers.</summary>
+ * <returns>The number of active timers.</returns>
+ */
+native GetActiveTimers();
+
+/**
  * <summary>Kills all timers a player owns.</summary>
  * <param name="timerid">The ID of the timer.</param>
  */

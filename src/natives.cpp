@@ -29,6 +29,21 @@ cell AMX_NATIVE_CALL Natives::GetTickCount(AMX *amx, cell *params) {
 	return (int) (getRelativeMsTime() % MAX_INT);
 }
 
+cell AMX_NATIVE_CALL Natives::IsValidTimer(AMX *amx, cell *params) {
+	if (params[0] < 4) {
+		return 0;
+	}
+	int id = params[1];
+	if (isValidTimer(id)) {
+		return timers[id]->repeat;
+	}
+	return false;
+}
+
+cell AMX_NATIVE_CALL Natives::GetActiveTimers(AMX *amx, cell *params) {
+	return timers.size();
+}
+
 cell AMX_NATIVE_CALL Natives::KillTimer(AMX *amx, cell *params) {
 	if (params[0] < 4) {
 		return 0;
