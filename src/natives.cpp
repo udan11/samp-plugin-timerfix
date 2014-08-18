@@ -129,6 +129,20 @@ cell AMX_NATIVE_CALL Natives::SetPlayerTimerEx_(AMX *amx, cell *params) {
 	return createTimer(amx, params[1], params[2], params[3], params[4], params[5], params[6], &params[7]);
 }
 
+cell AMX_NATIVE_CALL Natives::GetTimerFunctionName(AMX *amx, cell *params) {
+	if (params[0] < 2 * 4) {
+		return 0;
+	}
+	int id = params[1];
+	if (!isValidTimer(id)) {
+		amx_SetCString(amx, params[2], "", 1); // "\0"
+		return 0;
+	}
+	// TODO: Consider using an additional `len` parameter to avoids overflows.
+	amx_SetCString(amx, params[2], timers[id]->func, strlen(timers[id]->func));
+	return 1;
+}
+
 cell AMX_NATIVE_CALL Natives::SetTimerInterval(AMX *amx, cell *params) {
 	if (params[0] < 2 * 4) {
 		return 0;

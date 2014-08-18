@@ -153,6 +153,13 @@ native SetPlayerTimer_(playerid, func[], interval, delay, count);
 native SetPlayerTimerEx_(playerid, func[], interval, delay, count, format[], {Float, _}:...);
 
 /**
+ * <summary>Gets the name of the function that is called.</summary>
+ * <param name="timerid">The ID of the timer.</param>
+ * <param name="func">The name of the function.</param>
+ */
+native GetTimerFunctionName(timerid, func[]);
+
+/**
  * <summary>Sets the interval of a timer.</summary>
  * <param name="timerid">The ID of the timer.</param>
  * <param name="interval">The new interval.</param>
