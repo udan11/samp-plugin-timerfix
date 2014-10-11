@@ -24,7 +24,7 @@
  */
 
 /**
- * <version>1.4</version>
+ * <version>1.5</version>
  * <remarks>Supported parameters:
  * 		a, A = arrays (must be followed by an integer - array's szie);
  * 		b, B = boolean; c, C = character; d, D, i, I = integer;
