@@ -65,7 +65,11 @@ struct timer {
 };
 
 extern std::map<int, struct timer*> timers;
-extern unsigned long long startTime;
+#ifdef WIN32
+extern LARGE_INTEGER startTime;
+#else
+extern struct timespec startTime;
+#endif
 
 extern unsigned long long getMsTime();
 extern unsigned long long getRelativeMsTime();

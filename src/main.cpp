@@ -28,7 +28,11 @@
 extern void *pAMXFunctions;
 logprintf_t logprintf;
 std::map<int, struct timer*> timers;
-unsigned long long startTime = 0;
+#ifdef WIN32
+LARGE_INTEGER startTime;
+#else
+struct timespec startTime;
+#endif
 int lastTimerId = 1;
 
 const AMX_NATIVE_INFO NATIVES[] = {
@@ -51,22 +55,24 @@ const AMX_NATIVE_INFO NATIVES[] = {
 
 #ifdef WIN32
 	unsigned long long freq;
-	unsigned long long getMsTime() {
+	unsigned long long getRelativeMsTime() {
 		LARGE_INTEGER t;
 		QueryPerformanceCounter(&t);
-		return t.QuadPart / freq;
+		return (t.QuadPart - startTime.QuadPart) / freq;
 	}
 #else
-	unsigned long long getMsTime() {
+	unsigned long long getRelativeMsTime() {
 		struct timespec t;
 		clock_gettime(CLOCK_MONOTONIC, &t);
+		t.tv_sec -= startTime.tv_sec;
+		t.tv_nsec -= startTime.tv_nsec;
+		if (t.tv_nsec < 0) {
+			t.tv_sec -= 1;
+			t.tv_nsec += 1000000000;
+		}
 		return t.tv_sec * 1000 + t.tv_nsec / 1000000;
 	}
 #endif
-
-unsigned long long getRelativeMsTime() {
-	return getMsTime() - startTime;
-}
 
 int createTimer(AMX *amx, cell playerid, cell funcname, cell interval, cell delay, cell repeat, cell format, cell *params) {
 	struct timer *t = (struct timer*) malloc(sizeof(struct timer));
@@ -230,8 +236,10 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
 	LARGE_INTEGER t;
 	QueryPerformanceFrequency(&t);
 	freq = t.QuadPart / 1000;
+	QueryPerformanceCounter(&startTime);
+#else
+	clock_gettime(CLOCK_MONOTONIC, &startTime);
 #endif
-	startTime = getMsTime();
 	logprintf("  >> TimerFix " PLUGIN_VERSION " successfully loaded.");
 	return true;
 }
