@@ -24,6 +24,8 @@
     <ClInclude Include="src\sdk\plugincommon.h">
       <Filter>sdk</Filter>
     </ClInclude>
+    <ClInclude Include="src\timers.h" />
+    <ClInclude Include="src\time.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\natives.cpp" />
@@ -34,6 +36,8 @@
     <ClCompile Include="src\sdk\amxplugin.cpp">
       <Filter>sdk</Filter>
     </ClCompile>
+    <ClCompile Include="src\timers.cpp" />
+    <ClCompile Include="src\time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\plugin.rc" />

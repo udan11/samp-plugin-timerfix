@@ -68,12 +68,16 @@
     <ClInclude Include="src\sdk\amx\amx2.h" />
     <ClInclude Include="src\sdk\amx\sclinux.h" />
     <ClInclude Include="src\sdk\plugincommon.h" />
+    <ClInclude Include="src\time.h" />
+    <ClInclude Include="src\timers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\natives.cpp" />
     <ClCompile Include="src\sdk\amxplugin.cpp" />
     <ClCompile Include="src\sdk\amxplugin2.cpp" />
+    <ClCompile Include="src\time.cpp" />
+    <ClCompile Include="src\timers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\plugin.rc" />
