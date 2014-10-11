@@ -25,6 +25,8 @@
 
 #include "natives.h"
 
+#include <cstring>
+
 #include <map>
 
 #include "main.h"
