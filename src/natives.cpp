@@ -35,17 +35,17 @@
 
 cell AMX_NATIVE_CALL Natives::GetTickCount(AMX *amx, cell *params)
 {
-    return (int) (get_ms_time() % MAX_INT);
+    return (int) (GetMsTime() % MAX_INT);
 }
 
-cell AMX_NATIVE_CALL Natives::IsValidTimer(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL NativesTimerExists(AMX *amx, cell *params)
 {
 	if (params[0] < 1 * CELL_SIZE)
     {
         return 0;
     }
     int id = params[1];
-    if (isValidTimer(id))
+    if (TimerExists(id))
     {
         return timers[id]->repeat;
     }
@@ -64,7 +64,7 @@ cell AMX_NATIVE_CALL Natives::KillTimer(AMX *amx, cell *params)
         return 0;
     }
     int id = params[1];
-    if (isValidTimer(id))
+	if (TimerExists(id))
     {
         // Scheduling for deletion.
         timers[id]->repeat = 0;
@@ -100,7 +100,7 @@ cell AMX_NATIVE_CALL Natives::SetTimer(AMX *amx, cell *params)
     {
         return 0;
     }
-    return createTimer(amx, INVALID_PLAYER_ID, params[1], params[2], params[2], params[3] ? -1 : 1, NULL, NULL);
+    return CreateTimer(amx, INVALID_PLAYER_ID, params[1], params[2], params[2], params[3] ? -1 : 1, NULL, NULL);
 }
 
 cell AMX_NATIVE_CALL Natives::SetTimerEx(AMX *amx, cell *params)
@@ -109,7 +109,7 @@ cell AMX_NATIVE_CALL Natives::SetTimerEx(AMX *amx, cell *params)
     {
         return 0;
     }
-    return createTimer(amx, INVALID_PLAYER_ID, params[1], params[2], params[2], params[3] ? -1 : 1, params[4], &params[5]);
+    return CreateTimer(amx, INVALID_PLAYER_ID, params[1], params[2], params[2], params[3] ? -1 : 1, params[4], &params[5]);
 }
 
 cell AMX_NATIVE_CALL Natives::SetTimer_(AMX *amx, cell *params)
@@ -118,7 +118,7 @@ cell AMX_NATIVE_CALL Natives::SetTimer_(AMX *amx, cell *params)
     {
         return 0;
     }
-    return createTimer(amx, INVALID_PLAYER_ID, params[1], params[2], params[3], params[4], NULL, NULL);
+    return CreateTimer(amx, INVALID_PLAYER_ID, params[1], params[2], params[3], params[4], NULL, NULL);
 }
 
 cell AMX_NATIVE_CALL Natives::SetTimerEx_(AMX *amx, cell *params)
@@ -127,7 +127,7 @@ cell AMX_NATIVE_CALL Natives::SetTimerEx_(AMX *amx, cell *params)
     {
         return 0;
     }
-    return createTimer(amx, INVALID_PLAYER_ID, params[1], params[2], params[3], params[4], params[5], &params[6]);
+    return CreateTimer(amx, INVALID_PLAYER_ID, params[1], params[2], params[3], params[4], params[5], &params[6]);
 }
 
 cell AMX_NATIVE_CALL Natives::SetPlayerTimer(AMX *amx, cell *params)
@@ -136,7 +136,7 @@ cell AMX_NATIVE_CALL Natives::SetPlayerTimer(AMX *amx, cell *params)
     {
         return 0;
     }
-    return createTimer(amx, params[1], params[2], params[3], params[3], params[4] ? -1 : 1, NULL, NULL);
+    return CreateTimer(amx, params[1], params[2], params[3], params[3], params[4] ? -1 : 1, NULL, NULL);
 }
 
 cell AMX_NATIVE_CALL Natives::SetPlayerTimerEx(AMX *amx, cell *params)
@@ -145,7 +145,7 @@ cell AMX_NATIVE_CALL Natives::SetPlayerTimerEx(AMX *amx, cell *params)
     {
         return 0;
     }
-    return createTimer(amx, params[1], params[2], params[3], params[3], params[4] ? -1 : 1, params[5], &params[6]);
+    return CreateTimer(amx, params[1], params[2], params[3], params[3], params[4] ? -1 : 1, params[5], &params[6]);
 }
 
 cell AMX_NATIVE_CALL Natives::SetPlayerTimer_(AMX *amx, cell *params)
@@ -154,7 +154,7 @@ cell AMX_NATIVE_CALL Natives::SetPlayerTimer_(AMX *amx, cell *params)
     {
         return 0;
     }
-    return createTimer(amx, params[1], params[2], params[3], params[4], params[5], NULL, NULL);
+    return CreateTimer(amx, params[1], params[2], params[3], params[4], params[5], NULL, NULL);
 }
 
 cell AMX_NATIVE_CALL Natives::SetPlayerTimerEx_(AMX *amx, cell *params)
@@ -163,7 +163,7 @@ cell AMX_NATIVE_CALL Natives::SetPlayerTimerEx_(AMX *amx, cell *params)
     {
         return 0;
     }
-    return createTimer(amx, params[1], params[2], params[3], params[4], params[5], params[6], &params[7]);
+    return CreateTimer(amx, params[1], params[2], params[3], params[4], params[5], params[6], &params[7]);
 }
 
 cell AMX_NATIVE_CALL Natives::GetTimerFunctionName(AMX *amx, cell *params)
@@ -173,7 +173,7 @@ cell AMX_NATIVE_CALL Natives::GetTimerFunctionName(AMX *amx, cell *params)
         return 0;
     }
     int id = params[1];
-    if (!isValidTimer(id))
+	if (!TimerExists(id))
     {
         amx_SetCString(amx, params[2], "", 1); // "\0"
         return 0;
@@ -190,10 +190,10 @@ cell AMX_NATIVE_CALL Natives::SetTimerInterval(AMX *amx, cell *params)
         return 0;
     }
     int id = params[1], interval = params[2];
-    if (isValidTimer(id))
+	if (TimerExists(id))
     {
         timers[id]->interval = interval;
-        timers[id]->next = get_ms_time() + interval;
+        timers[id]->next = GetMsTime() + interval;
     }
     return 1;
 }
@@ -205,7 +205,7 @@ cell AMX_NATIVE_CALL Natives::GetTimerInterval(AMX *amx, cell *params)
         return 0;
     }
     int id = params[1];
-    if (isValidTimer(id))
+	if (TimerExists(id))
     {
         return timers[id]->interval;
     }
@@ -219,9 +219,9 @@ cell AMX_NATIVE_CALL Natives::GetTimerIntervalLeft(AMX *amx, cell *params)
         return 0;
     }
     int id = params[1];
-    if (isValidTimer(id))
+	if (TimerExists(id))
     {
-        return timers[id]->next - get_ms_time();
+        return timers[id]->next - GetMsTime();
     }
     return 0;
 }
@@ -234,9 +234,9 @@ cell AMX_NATIVE_CALL Natives::SetTimerDelay(AMX *amx, cell *params)
         return 0;
     }
     int id = params[1], delay = params[2];
-    if (isValidTimer(id))
+	if (TimerExists(id))
     {
-        timers[id]->next = get_ms_time() + delay;
+        timers[id]->next = GetMsTime() + delay;
     }
     return 1;
 }
@@ -248,7 +248,7 @@ cell AMX_NATIVE_CALL Natives::SetTimerCount(AMX *amx, cell *params)
         return 0;
     }
     int id = params[1], count = params[2];
-    if (isValidTimer(id))
+	if (TimerExists(id))
     {
         timers[id]->repeat = count;
     }
@@ -262,7 +262,7 @@ cell AMX_NATIVE_CALL Natives::GetTimerCallsLeft(AMX *amx, cell *params)
         return 0;
     }
     int id = params[1];
-    if (isValidTimer(id))
+	if (TimerExists(id))
     {
         return timers[id]->repeat;
     }

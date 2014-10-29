@@ -32,7 +32,7 @@ unsigned long long freq;
 struct timespec startTime;
 #endif
 
-void init_time()
+void InitTime()
 {
 #ifdef WIN32
     LARGE_INTEGER t;
@@ -44,7 +44,7 @@ void init_time()
 #endif
 }
 
-unsigned long long get_ms_time()
+unsigned long long GetMsTime()
 {
 #ifdef WIN32
     LARGE_INTEGER t;

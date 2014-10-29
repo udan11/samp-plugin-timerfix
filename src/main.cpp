@@ -66,7 +66,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 {
     logprintf = (logprintf_t) ppData[PLUGIN_DATA_LOGPRINTF];
     pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
-    init_time();
+    InitTime();
     logprintf("  >> TimerFix " PLUGIN_VERSION " successfully loaded.");
     return true;
 }
@@ -88,7 +88,7 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *amx)
         struct timer *t = it->second;
         if (t->amx == amx)
         {
-            freeTimer(t);
+            DestroyTimer(t);
             timers.erase(it);
         }
     }
@@ -102,7 +102,7 @@ PLUGIN_EXPORT void PLUGIN_CALL Unload()
 
 PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
 {
-    unsigned long long now = get_ms_time();
+    unsigned long long now = GetMsTime();
     for (std::map<int, struct timer*>::iterator it = timers.begin(), next = it; it != timers.end(); it = next)
     {
         ++next;
@@ -112,7 +112,7 @@ PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
             if (t->next < now)
             {
                 t->next += t->interval;
-                executeTimer(it->second);
+                ExecuteTimer(it->second);
                 if (t->repeat > 0)
                 {
                     --t->repeat;
@@ -121,7 +121,7 @@ PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
         }
         else
         {
-            freeTimer(t);
+            DestroyTimer(t);
             timers.erase(it);
         }
     }

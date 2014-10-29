@@ -31,5 +31,5 @@
 #include <time.h>
 #endif
 
-extern void init_time();
-extern unsigned long long get_ms_time();
+extern void InitTime();
+extern unsigned long long GetMsTime();

@@ -33,7 +33,7 @@
 std::map<int, struct timer*> timers;
 int lastTimerId = 1;
 
-int createTimer(AMX *amx, cell playerid, cell funcname, cell interval, cell delay, cell repeat, cell format, cell *params)
+int CreateTimer(AMX *amx, cell playerid, cell funcname, cell interval, cell delay, cell repeat, cell format, cell *params)
 {
     struct timer *t = (struct timer*) malloc(sizeof(struct timer));
     if (t == NULL)
@@ -49,13 +49,13 @@ int createTimer(AMX *amx, cell playerid, cell funcname, cell interval, cell dela
     if (amx_FindPublic(amx, t->func, &t->funcidx))
     {
         logprintf("[plugin.timerfix] %s: Function was not found.", t->func);
-        freeTimer(t);
+        DestroyTimer(t);
         return 0;
     }
     if (interval < 0)
     {
         logprintf("[plugin.timerfix] %s: Interval (%d) must be at least 0.", t->func, interval);
-        freeTimer(t);
+        DestroyTimer(t);
         return 0;
     }
     t->interval = interval;
@@ -63,10 +63,10 @@ int createTimer(AMX *amx, cell playerid, cell funcname, cell interval, cell dela
     if (delay < 0)
     {
         logprintf("[plugin.timerfix] %s: Delay (%d) must be at least 0.", t->func, delay);
-        freeTimer(t);
+        DestroyTimer(t);
         return 0;
     }
-    t->next = get_ms_time() + delay;
+    t->next = GetMsTime() + delay;
     if (format != NULL)
     {
         amx_GetCString(amx, format, t->format);
@@ -123,12 +123,12 @@ int createTimer(AMX *amx, cell playerid, cell funcname, cell interval, cell dela
     return t->id;
 }
 
-bool isValidTimer(int id)
+bool TimerExists(int id)
 {
     return timers.find(id) != timers.end();
 }
 
-void freeTimer(struct timer *&t)
+void DestroyTimer(struct timer *&t)
 {
     free(t->func);
     free(t->format);
@@ -146,7 +146,7 @@ void freeTimer(struct timer *&t)
     free(t);
 }
 
-int executeTimer(struct timer *t)
+int ExecuteTimer(struct timer *t)
 {
     cell ret, amx_addr = -1;
     if (t->format != NULL)
