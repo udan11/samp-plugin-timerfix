@@ -25,7 +25,7 @@ ifndef GXX
 	GXX = g++
 endif
 
-.PHONY = build clean
+.PHONY: build clean
 
 COMPILE_FLAGS = -c -fPIC -m32 -O3 -w -Wall -Isrc/sdk/amx/ -DLINUX
 LIBRARIES = -lrt
