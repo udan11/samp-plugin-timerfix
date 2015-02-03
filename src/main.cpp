@@ -97,7 +97,7 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *amx)
 
 PLUGIN_EXPORT void PLUGIN_CALL Unload()
 {
-    logprintf("[plugin.timerfix] Plugsin successfully unloaded!");
+    logprintf("[plugin.timerfix] Plugin successfully unloaded!");
 }
 
 PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
