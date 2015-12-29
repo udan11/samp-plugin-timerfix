@@ -38,7 +38,7 @@ cell AMX_NATIVE_CALL Natives::GetTickCount(AMX *amx, cell *params)
     return (int) (GetMsTime() % MAX_INT);
 }
 
-cell AMX_NATIVE_CALL NativesTimerExists(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL Natives::IsValidTimer(AMX *amx, cell *params)
 {
 	if (params[0] < 1 * CELL_SIZE)
     {
