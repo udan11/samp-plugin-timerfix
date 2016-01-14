@@ -54,6 +54,7 @@ const AMX_NATIVE_INFO NATIVES[] =
     {"SetTimerDelay", Natives::SetTimerDelay},
     {"SetTimerCount", Natives::SetTimerCount},
     {"GetTimerCallsLeft", Natives::GetTimerCallsLeft},
+    {"IsValidTimer", Natives::IsValidTimer},
     {NULL, NULL}
 };
 
